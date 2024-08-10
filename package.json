@@ -2,9 +2,7 @@
   "name": "rock-paper-scissors",
   "private": true,
   "version": "1.0.0",
-  "engines": {
-    "node": "20.x",
-    "npm": ">=6"
+  "engines": { "node": "20.x" }
   },
   "dependencies": {
     "@craco/craco": "6.2.0",
