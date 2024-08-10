@@ -1,0 +1,382 @@
+.App {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  border-radius: 15px; /* Rounded corners for the main container */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
+.converter {
+  background-color: #f5f5f5;
+  border-radius: 15px; /* Rounded corners */
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.dark-mode .converter {
+  background-color: #333;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.dark-mode .button {
+  background-color: #555;
+}
+
+.dark-mode .button:hover {
+  background-color: #333;
+}
+
+.time-zone-options {
+  margin-bottom: 20px;
+}
+
+.time-zone-options ul {
+  list-style: none;
+  padding: 0;
+}
+
+.time-zone-options li {
+  display: inline;
+  margin: 0 10px;
+}
+
+.time-zone-options button {
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.time-zone-options button:hover {
+  background-color: #0056b3;
+}
+
+.dark-mode .time-zone-options button {
+  background-color: #555;
+}
+
+.dark-mode .time-zone-options button:hover {
+  background-color: #333;
+}
+
+.time-zone-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-zone-item {
+  background-color: #fff;
+  border-radius: 15px; /* Rounded corners */
+  padding: 15px;
+  margin: 10px;
+  width: 60%; /* Set width relative to screen width */
+  max-width: 600px; /* Optional: limit max width */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s;
+}
+
+.dark-mode .time-zone-item {
+  background-color: #444;
+}
+
+.time-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* Ensure full width of time-column */
+}
+
+.slider {
+  width: 60%; /* 60% of the parent width */
+  margin: 10px 0;
+  -webkit-appearance: none;
+  background: linear-gradient(
+    to right,
+    var(--slider-color-start) 0%,
+    var(--slider-color-end) 100%
+  );
+  height: 15px; /* Increased height */
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px; /* Increased thumb size */
+  height: 30px;
+  background: var(--thumb-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 30px; /* Increased thumb size */
+  height: 30px;
+  background: var(--thumb-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dark-mode .slider {
+  background: linear-gradient(to right, #555 0%, #333 100%);
+}
+
+.dark-mode .slider::-webkit-slider-thumb {
+  background: #bbb;
+}
+
+.dark-mode .slider::-moz-range-thumb {
+  background: #bbb;
+}
+
+.time-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.time-input {
+  width: 60px;
+  font-size: 1.2em;
+  text-align: center;
+  margin: 5px;
+}
+
+.edit-note {
+  font-size: 0.9em;
+  color: #888;
+  margin-top: 5px;
+}
+
+.dark-mode .edit-note {
+  color: #aaa;
+}
+
+.delete-button {
+  background: transparent;
+  border: none;
+  color: #ff4d4d;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .footer {
+  background-color: #333;
+  color: #fff;
+}
+
+.footer h2 {
+  margin-bottom: 15px;
+}
+
+.utc-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.utc-info-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  width: 80%;
+  max-width: 700px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .utc-info-item {
+  background-color: #444;
+}
+
+.utc-info-item h3 {
+  margin-top: 0;
+}
+
+.utc-info-item ul {
+  list-style: none;
+  padding: 0;
+}
+
+.utc-info-item li {
+  margin-bottom: 10px;
+}
+/* Add this to App.css */
+
+.schedule-meet-button {
+  background-color: #28a745; /* Green color for the button */
+}
+
+.schedule-meet-button:hover {
+  background-color: #218838; /* Darker green for hover effect */
+}
+/* Add these styles to App.css */
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.time-input {
+  width: 150px; /* Adjust as needed */
+  margin-right: 10px;
+}
+
+.schedule-meet-button {
+  background-color: #28a745; /* Green color for the button */
+}
+
+.schedule-meet-button:hover {
+  background-color: #218838; /* Darker green for hover effect */
+}
+/* Add these styles to App.css */
+
+.App {
+  text-align: center;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.add-time-zone-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-time-zone-container select {
+  margin-bottom: 10px;
+}
+
+.time-input {
+  width: 150px; /* Adjust as needed */
+  margin-right: 10px;
+}
+
+.button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.schedule-meet-button {
+  background-color: #28a745; /* Green color for the button */
+}
+
+.schedule-meet-button:hover {
+  background-color: #218838; /* Darker green for hover effect */
+}
+
+.dark-mode .button {
+  background-color: #555;
+  color: #fff;
+}
+
+.dark-mode .button:hover {
+  background-color: #666;
+}
+
+.time-zone-list {
+  margin-top: 20px;
+}
+
+.time-zone-item {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.time-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.delete-button:hover {
+  color: darkred;
+}
+
+.slider {
+  width: 100%;
+}
+
+.edit-note {
+  font-size: 12px;
+  color: gray;
+}
+
+.footer {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.footer h2 {
+  margin-bottom: 10px;
+}
+
+.utc-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.utc-info-item {
+  max-width: 600px;
+}
