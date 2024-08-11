@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, {useState, useEffect} from 'react'
+import './App.css'
 
 const availableTimeZones = [
   'UTC',
@@ -18,7 +18,7 @@ const availableTimeZones = [
   'America/Sao_Paulo',
   'Asia/Dubai',
   // Add more as needed
-];
+]
 
 const offsets = {
   UTC: 0,
@@ -37,128 +37,177 @@ const offsets = {
   'America/Sao_Paulo': -180,
   'Asia/Dubai': 240,
   // Add more offsets as needed
-};
+}
 
 const formatTimeForGoogleCalendar = (hours, minutes, period) => {
-  const totalMinutes =
-    (period === 'PM' && hours !== 12 ? hours + 12 : period === 'AM' && hours === 12 ? 0 : hours) * 60 +
-    minutes;
-  const startTime = new Date();
-  startTime.setUTCMinutes(totalMinutes);
+  let totalMinutes
 
-  const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Assuming 1-hour duration
-  const formatDate = (date) => date.toISOString().replace(/-|:|\.\d+Z/g, '');
+  if (period === 'PM') {
+    if (hours !== 12) {
+      totalMinutes = (hours + 12) * 60 + minutes
+    } else {
+      totalMinutes = 12 * 60 + minutes // 12 PM is 12:00
+    }
+  } else if (period === 'AM') {
+    if (hours === 12) {
+      totalMinutes = 0 * 60 + minutes // 12 AM is 00:00
+    } else {
+      totalMinutes = hours * 60 + minutes
+    }
+  } else {
+    totalMinutes = hours * 60 + minutes
+  }
+
+  const startTime = new Date()
+  startTime.setUTCMinutes(totalMinutes)
+
+  const endTime = new Date(startTime.getTime() + 60 * 60 * 1000) // Assuming 1-hour duration
+  const formatDate = date => date.toISOString().replace(/-|:|\.\d+Z/g, '')
 
   return {
     startTime: formatDate(startTime),
     endTime: formatDate(endTime),
-  };
-};
+  }
+}
 
 const App = () => {
   const [timeZones, setTimeZones] = useState([
-    { name: 'UTC', hours: 8, minutes: 0, period: 'AM' },
-    { name: 'Asia/Kolkata', hours: 2, minutes: 0, period: 'PM' },
-  ]);
-  const [darkMode, setDarkMode] = useState(false);
-  const [selectedTimeZone, setSelectedTimeZone] = useState('');
+    {name: 'UTC', hours: 8, minutes: 0, period: 'AM'},
+    {name: 'Asia/Kolkata', hours: 2, minutes: 0, period: 'PM'},
+  ])
+  const [darkMode, setDarkMode] = useState(false)
+  const [selectedTimeZone, setSelectedTimeZone] = useState('')
 
   const timeToMinutes = (hours, minutes, period) => {
-    const totalHours =
-      period === 'PM' && hours !== 12 ? hours + 12 : period === 'AM' && hours === 12 ? 0 : hours;
-    return totalHours * 60 + minutes;
-  };
+    let totalHours
 
-  const minutesToTime = (minutes) => {
-    const totalMinutes = ((minutes % 1440) + 1440) % 1440; // Ensure positive value
-    const hours = Math.floor(totalMinutes / 60);
-    const mins = totalMinutes % 60;
-    const period = hours < 12 ? 'AM' : 'PM';
-    const displayHours = hours % 12 || 12;
-    return { hours: displayHours, minutes: mins, period };
-  };
+    if (period === 'PM') {
+      if (hours !== 12) {
+        totalHours = hours + 12
+      } else {
+        totalHours = 12 // 12 PM is 12:00
+      }
+    } else if (period === 'AM') {
+      if (hours === 12) {
+        totalHours = 0 // 12 AM is 00:00
+      } else {
+        totalHours = hours
+      }
+    } else {
+      totalHours = hours
+    }
+
+    return totalHours * 60 + minutes
+  }
+
+  const minutesToTime = minutes => {
+    const totalMinutes = ((minutes % 1440) + 1440) % 1440 // Ensure positive value
+    const hours = Math.floor(totalMinutes / 60)
+    const mins = totalMinutes % 60
+    const period = hours < 12 ? 'AM' : 'PM'
+    const displayHours = hours % 12 || 12
+    return {hours: displayHours, minutes: mins, period}
+  }
 
   const updateTimeZones = (index, newHours, newMinutes, newPeriod) => {
-    const baseTime = timeToMinutes(newHours, newMinutes, newPeriod);
+    const baseTime = timeToMinutes(newHours, newMinutes, newPeriod)
     const updatedZones = timeZones.map((zone, i) => {
       if (i === index) {
-        return { ...zone, hours: newHours, minutes: newMinutes, period: newPeriod };
+        return {
+          ...zone,
+          hours: newHours,
+          minutes: newMinutes,
+          period: newPeriod,
+        }
       } else {
-        const offset = offsets[zone.name] - offsets[timeZones[index].name];
-        const newTime = baseTime + offset;
-        const updatedTime = minutesToTime(newTime);
+        const offset = offsets[zone.name] - offsets[timeZones[index].name]
+        const newTime = baseTime + offset
+        const updatedTime = minutesToTime(newTime)
         return {
           ...zone,
           hours: updatedTime.hours,
           minutes: updatedTime.minutes,
           period: updatedTime.period,
-        };
+        }
       }
-    });
-    setTimeZones(updatedZones);
-  };
+    })
+    setTimeZones(updatedZones)
+  }
 
   const handleTimeInputChange = (index, field, value) => {
-    const updatedZones = [...timeZones];
-    updatedZones[index] = { ...updatedZones[index], [field]: value };
-    setTimeZones(updatedZones);
-    updateTimeZones(index, updatedZones[index].hours, updatedZones[index].minutes, updatedZones[index].period);
-  };
+    const updatedZones = [...timeZones]
+    updatedZones[index] = {
+      ...updatedZones[index],
+      [field]: value,
+    }
+    setTimeZones(updatedZones)
+    updateTimeZones(
+      index,
+      updatedZones[index].hours,
+      updatedZones[index].minutes,
+      updatedZones[index].period,
+    )
+  }
 
   const handleSliderChange = (index, event) => {
-    const newTime = parseInt(event.target.value, 10);
-    const { hours, minutes, period } = minutesToTime(newTime);
-    updateTimeZones(index, hours, minutes, period);
-  };
+    const newTime = parseInt(event.target.value, 10)
+    const {hours, minutes, period} = minutesToTime(newTime)
+    updateTimeZones(index, hours, minutes, period)
+  }
 
   const handleAddTimeZone = () => {
-    if (selectedTimeZone && !timeZones.find((tz) => tz.name === selectedTimeZone)) {
-      const defaultTime = { hours: 8, minutes: 0, period: 'AM' };
-      const newZone = { name: selectedTimeZone, ...defaultTime };
-      setTimeZones([...timeZones, newZone]);
-      setSelectedTimeZone('');
+    if (
+      selectedTimeZone &&
+      !timeZones.find(tz => tz.name === selectedTimeZone)
+    ) {
+      const defaultTime = {hours: 8, minutes: 0, period: 'AM'}
+      const newZone = {name: selectedTimeZone, ...defaultTime}
+      setTimeZones([...timeZones, newZone])
+      setSelectedTimeZone('')
     }
-  };
+  }
 
-  const handleDeleteTimeZone = (name) => {
-    setTimeZones(timeZones.filter((zone) => zone.name !== name));
-  };
+  const handleDeleteTimeZone = name => {
+    setTimeZones(timeZones.filter(zone => zone.name !== name))
+  }
 
   const handleSwapZones = () => {
-    setTimeZones(timeZones.slice().reverse());
-  };
+    setTimeZones(timeZones.slice().reverse())
+  }
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+    setDarkMode(!darkMode)
+  }
 
   const generateGoogleCalendarUrl = () => {
-    const { startTime, endTime } = formatTimeForGoogleCalendar(
+    const {startTime, endTime} = formatTimeForGoogleCalendar(
       timeZones[0].hours,
       timeZones[0].minutes,
-      timeZones[0].period
-    );
-    const eventTitle = 'Meeting';
-    const eventDescription = 'Scheduled meeting with time zones';
+      timeZones[0].period,
+    )
+    const eventTitle = 'Meeting'
+    const eventDescription = 'Scheduled meeting with time zones'
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      eventTitle
-    )}&dates=${startTime}/${endTime}&details=${encodeURIComponent(eventDescription)}`;
-  };
+      eventTitle,
+    )}&dates=${startTime}/${endTime}&details=${encodeURIComponent(
+      eventDescription,
+    )}`
+  }
 
   useEffect(() => {
     document.documentElement.style.setProperty(
       '--slider-color-start',
-      darkMode ? '#555' : '#007bff'
-    );
+      darkMode ? '#555' : '#007bff',
+    )
     document.documentElement.style.setProperty(
       '--slider-color-end',
-      darkMode ? '#333' : '#ccc'
-    );
+      darkMode ? '#333' : '#ccc',
+    )
     document.documentElement.style.setProperty(
       '--thumb-color',
-      darkMode ? '#bbb' : '#007bff'
-    );
-  }, [darkMode]);
+      darkMode ? '#bbb' : '#007bff',
+    )
+  }, [darkMode])
 
   return (
     <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
@@ -174,11 +223,11 @@ const App = () => {
           <div className="add-time-zone-container">
             <select
               value={selectedTimeZone}
-              onChange={(e) => setSelectedTimeZone(e.target.value)}
+              onChange={e => setSelectedTimeZone(e.target.value)}
               className={`time-input ${darkMode ? 'dark-mode' : ''}`}
             >
               <option value="">Select Time Zone</option>
-              {availableTimeZones.map((zone) => (
+              {availableTimeZones.map(zone => (
                 <option key={zone} value={zone}>
                   {zone}
                 </option>
@@ -212,7 +261,7 @@ const App = () => {
                   min="0"
                   max="1439"
                   value={timeToMinutes(zone.hours, zone.minutes, zone.period)}
-                  onChange={(event) => handleSliderChange(index, event)}
+                  onChange={event => handleSliderChange(index, event)}
                   className="slider"
                 />
                 <div className="time-input-container">
@@ -221,8 +270,12 @@ const App = () => {
                     min="1"
                     max="12"
                     value={zone.hours}
-                    onChange={(event) =>
-                      handleTimeInputChange(index, 'hours', parseInt(event.target.value, 10))
+                    onChange={event =>
+                      handleTimeInputChange(
+                        index,
+                        'hours',
+                        parseInt(event.target.value, 10),
+                      )
                     }
                     className={`time-input ${darkMode ? 'dark-mode' : ''}`}
                     placeholder="Hours"
@@ -232,15 +285,19 @@ const App = () => {
                     min="0"
                     max="59"
                     value={zone.minutes}
-                    onChange={(event) =>
-                      handleTimeInputChange(index, 'minutes', parseInt(event.target.value, 10))
+                    onChange={event =>
+                      handleTimeInputChange(
+                        index,
+                        'minutes',
+                        parseInt(event.target.value, 10),
+                      )
                     }
                     className={`time-input ${darkMode ? 'dark-mode' : ''}`}
                     placeholder="Minutes"
                   />
                   <select
                     value={zone.period}
-                    onChange={(event) =>
+                    onChange={event =>
                       handleTimeInputChange(index, 'period', event.target.value)
                     }
                     className={`time-input ${darkMode ? 'dark-mode' : ''}`}
@@ -304,7 +361,7 @@ const App = () => {
         </div>
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
